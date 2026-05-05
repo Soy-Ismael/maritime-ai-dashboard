@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maritime AI Dashboard — UMass Boston IMPACT</title>
+  <meta name="description" content="Panel maritimo inteligente con NMEA 2000, Signal K, telemetria simulada y copiloto de IA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido principal</a>
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#43d8eb"/><stop offset="100%" stop-color="#1795a5"/></linearGradient></defs>
+          <path d="M6 32c6-.5 10-5 14-12 3 7 8 12 16 13 4 1 6 0 8-3-2 8-7 13-13 16-7 3-15 2-20-2-6-4-10-10-11-17 2 3 4 5 6 5Z" fill="url(#bg)"/>
+          <path d="M24 7c5 4 8 10 8 17 0 2 0 4-1 6-2-3-5-6-7-8-2 2-5 5-7 8-1-2-1-4-1-6 0-7 3-13 8-17Z" stroke="#43d8eb" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <p class="eyebrow">UMass Boston · IMPACT Program</p>
+        <h1>Maritime AI Dashboard</h1>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div class="status-pill" id="connPill" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="connLabel">Signal K simulado</span>
+      </div>
+      <button id="themeBtn" class="icon-btn" aria-label="Cambiar tema" title="Cambiar tema">
+        <span id="themeIcon" aria-hidden="true">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="layout">
+    <aside class="sidebar panel" aria-label="Panel de configuracion y accesos rapidos">
+      <section class="sec-stack" aria-labelledby="apiTitle">
+        <div><p class="eyebrow">Conexion externa</p><h2 id="apiTitle">Conectar API Python</h2></div>
+        <label class="field-label" for="apiEndpoint">URL del endpoint del copiloto</label>
+        <input id="apiEndpoint" class="field" type="url" placeholder="http://localhost:8000/api/copilot/chat" aria-describedby="apiHelp" />
+        <button id="saveEndpoint" class="btn btn-primary btn-full">Conectar endpoint</button>
+        <p id="apiHelp" class="field-help">Envia <code>question</code>, <code>telemetry</code> y <code>source</code> como POST JSON. Ver <strong>python_api_example.py</strong>.</p>
+      </section>
+      <section class="sec-stack" aria-labelledby="emergTitle">
+        <div class="sec-head sm"><h2 id="emergTitle">Emergencias rapidas</h2><span class="mini-badge err">atajos</span></div>
+        <div class="chip-grid" role="group">
+          <button class="action-chip" data-q="Que hacer en caso de hombre al agua (MOB)?">MOB</button>
+          <button class="action-chip" data-q="Que hacer en caso de fuego en sala de maquinas?">Fuego</button>
+          <button class="action-chip" data-q="Que hacer si entra agua al casco?">Achique</button>
+          <button class="action-chip" data-q="Que hacer ante perdida de propulsion?">Propulsion</button>
+          <button class="action-chip" data-q="Como emitir un MAYDAY por radio VHF?">MAYDAY</button>
+        </div>
+      </section>
+      <section class="sec-stack" aria-labelledby="stackTitle">
+        <div class="sec-head sm"><h2 id="stackTitle">Stack gratuito</h2><span class="mini-badge acc">free &amp; open source</span></div>
+        <div id="freeStack" class="stack-list"></div>
+      </section>
+      <section class="sec-stack" aria-labelledby="checkTitle">
+        <div class="sec-head sm"><h2 id="checkTitle">Checklist de IA</h2><span class="mini-badge ok">recomendaciones</span></div>
+        <ul id="checklist" class="checklist"></ul>
+      </section>
+    </aside>
+
+    <section class="content" aria-label="Contenido principal">
+      <article class="hero panel" aria-label="Resumen del estado de la embarcacion">
+        <div class="hero-copy">
+          <p class="eyebrow">Telemetria · Diagnostico · Inteligencia Artificial</p>
+          <h2>Panel operativo para monitoreo, seguridad y decisiones a bordo</h2>
+          <p class="lead">Consume datos desde una Raspberry Pi con gateway NMEA 2000 y Signal K, y se conecta con un backend de IA en Python para asistencia en tiempo real.</p>
+          <div class="badge-row">
+            <span class="soft-badge">NMEA 2000</span>
+            <span class="soft-badge">Signal K</span>
+            <span class="soft-badge">REST / JSON</span>
+            <span class="soft-badge">FastAPI ready</span>
+            <span class="soft-badge">Raspberry Pi</span>
+          </div>
+        </div>
+        <div class="hero-status surf-card">
+          <div class="ring-wrap" aria-label="Indice de salud" role="img">
+            <svg class="status-ring" viewBox="0 0 108 108" aria-hidden="true">
+              <defs><linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--acc)" stop-opacity=".32"/><stop offset="100%" stop-color="var(--acc)" stop-opacity="0"/></linearGradient></defs>
+              <circle class="ring-track" cx="54" cy="54" r="48"></circle>
+              <circle class="ring-value" id="healthRing" cx="54" cy="54" r="48"></circle>
+            </svg>
+            <div class="ring-center"><strong id="healthScore" aria-live="polite">--</strong><span>Salud</span></div>
+          </div>
+          <div class="vessel-meta">
+            <div class="meta-row"><span>Embarcacion</span><strong id="vName">—</strong></div>
+            <div class="meta-row"><span>MMSI</span><strong id="vMmsi">—</strong></div>
+            <div class="meta-row"><span>Bandera</span><strong id="vFlag">—</strong></div>
+            <div class="meta-row"><span>Actualizado</span><strong id="vTime">—</strong></div>
+          </div>
+        </div>
+      </article>
+
+      <section class="kpi-grid" aria-label="Indicadores clave">
+        <article class="kpi panel"><div class="kpi-head"><span>Velocidad</span><span id="speedTrend" class="trend-badge flat">—</span></div><strong id="speedVal" aria-live="polite">—</strong><small>nudos (SOG)</small><div id="speedSpark" class="sparkline" aria-hidden="true"></div></article>
+        <article class="kpi panel"><div class="kpi-head"><span>Rumbo</span><span class="trend-badge flat">COG</span></div><strong id="headingVal" aria-live="polite">—</strong><small>grados verdaderos</small><div id="headingSpark" class="sparkline" aria-hidden="true"></div></article>
+        <article class="kpi panel"><div class="kpi-head"><span>RPM motor</span><span id="rpmTrend" class="trend-badge flat">—</span></div><strong id="rpmVal" aria-live="polite">—</strong><small>revoluciones por minuto</small><div id="rpmSpark" class="sparkline" aria-hidden="true"></div></article>
+        <article class="kpi panel"><div class="kpi-head"><span>Bateria house</span><span class="trend-badge flat">SOC</span></div><strong id="battVal" aria-live="polite">—</strong><small>voltios · porcentaje</small><div id="battSpark" class="sparkline" aria-hidden="true"></div></article>
+      </section>
+
+      <div class="two-col">
+        <article class="panel"><div class="sec-head"><h2>Navegacion y ambiente</h2><span class="mini-badge">snapshot</span></div><div id="navGrid" class="metric-grid"></div></article>
+        <article class="panel"><div class="sec-head"><h2>Propulsion y energia</h2><span class="mini-badge acc">PGNs motor</span></div><div id="engGrid" class="metric-grid"></div></article>
+      </div>
+
+      <div class="two-col">
+        <article class="panel"><div class="sec-head"><h2>Alertas y riesgo</h2><span class="mini-badge warn">prioridades</span></div><div id="alertsList" class="alerts-list"></div></article>
+        <article class="panel">
+          <div class="sec-head"><h2>Mapa operativo</h2><span class="mini-badge">bridge view</span></div>
+          <div class="map-card" role="img" aria-label="Derrota y trafico AIS">
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="route route-main" aria-hidden="true"></div>
+            <div class="route route-alt" aria-hidden="true"></div>
+            <div class="marker vessel" title="Embarcacion propia"></div>
+            <div class="marker target" title="Blanco AIS"></div>
+            <div class="marker waypoint" title="Proximo waypoint"></div>
+            <div class="map-legend">
+              <span><i class="ldot vessel" aria-hidden="true"></i>Embarcacion</span>
+              <span><i class="ldot target" aria-hidden="true"></i>Trafico AIS</span>
+              <span><i class="ldot waypoint" aria-hidden="true"></i>Waypoint</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="two-col">
+        <article class="panel chat-panel">
+          <div class="sec-head"><h2>Copiloto conversacional</h2><span class="mini-badge acc">IA</span></div>
+          <div class="prompt-bar" role="group" aria-label="Preguntas rapidas">
+            <button class="prompt-pill" data-q="Dame un resumen del estado del barco.">Resumen</button>
+            <button class="prompt-pill" data-q="Como esta el motor ahora mismo?">Motor</button>
+            <button class="prompt-pill" data-q="Como esta la energia y la bateria?">Energia</button>
+            <button class="prompt-pill" data-q="Que alertas requieren atencion prioritaria?">Alertas</button>
+          </div>
+          <div id="chatWindow" class="chat-window" role="log" aria-live="polite"></div>
+          <form id="chatForm" class="chat-form" novalidate>
+            <label for="chatInput" class="sr-only">Escribe tu pregunta</label>
+            <textarea id="chatInput" class="chat-input" rows="2" placeholder="Pregunta por el estado del barco, emergencias o mantenimiento..." aria-required="true"></textarea>
+            <button type="submit" class="btn btn-send" aria-label="Enviar">&#10148;</button>
+          </form>
+          <p class="field-help center" id="chatMode">Modo local activo — sin endpoint externo configurado.</p>
+        </article>
+
+        <article class="panel data-panel">
+          <div class="sec-head"><h2>Datos tecnicos</h2><span class="mini-badge">JSON / API</span></div>
+          <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" data-tab="telemetry" aria-selected="true" aria-controls="panel-telemetry">Telemetria</button>
+            <button class="tab" role="tab" data-tab="api" aria-selected="false" aria-controls="panel-api">API</button>
+            <button class="tab" role="tab" data-tab="events" aria-selected="false" aria-controls="panel-events">Eventos</button>
+          </div>
+          <div id="panel-telemetry" class="tab-panel active" role="tabpanel"><pre id="telemetryPre" class="code-block" tabindex="0"></pre></div>
+          <div id="panel-api" class="tab-panel" role="tabpanel"><pre id="apiPre" class="code-block" tabindex="0"></pre></div>
+          <div id="panel-events" class="tab-panel" role="tabpanel"><div id="eventTimeline" class="timeline"></div></div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
